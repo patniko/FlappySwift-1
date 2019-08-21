@@ -7,6 +7,11 @@
 //
 
 import UIKit
+import AppCenter
+import AppCenterCrashes
+import AppCenterAnalytics
+import AppCenterAuth
+import AppCenterData
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +21,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        MSAppCenter.start("06cf3a29-2613-4e12-a5ad-96d5d2d79f3d", withServices:[
+            MSCrashes.self, MSAnalytics.self, MSAuth.self
+            ])
+        MSAuth.signOut();
+        MSAuth.signIn { userInformation, error in
+            
+            if error == nil {
+                // Sign-in succeeded.
+                var accountId = userInformation!.accountId;
+                var idToken = userInformation!.idToken;
+                var accessToken = userInformation!.accessToken;
+            
+                
+            } else {
+                // Do something with sign failure.
+            }
+            
+        }
+        
         return true
     }
 

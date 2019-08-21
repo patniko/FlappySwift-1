@@ -32,5 +32,18 @@
 	</array>
 	<key>UIStatusBarHidden</key>
 	<true/>
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLName</key>
+            <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>msal06cf3a29-2613-4e12-a5ad-96d5d2d79f3d</string>
+            </array>
+        </dict>
+    </array>
 </dict>
 </plist>

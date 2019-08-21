@@ -6,7 +6,12 @@ target 'FlappyBird' do
   use_frameworks!
 
   # Pods for FlappyBird
+  pod 'AppCenter'
   pod 'AppCenter/Auth'
+  pod 'AppCenter/Data'
+  pod 'AppCenter/Crashes'
+  pod 'AppCenter/Analytics'
+  pod 'AppCenter/Push'
 
   target 'FlappyBirdTests' do
     inherit! :search_paths

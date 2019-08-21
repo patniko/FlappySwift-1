@@ -7,6 +7,8 @@
 //
 
 import SpriteKit
+import AppCenterAnalytics
+import AppCenterCrashes
 
 class GameScene: SKScene, SKPhysicsContactDelegate{
     let verticalPipeGap = 150.0
@@ -184,6 +186,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     }
     
     func resetScene (){
+        MSAnalytics.trackEvent("Scene Reset")
+        
         // Move bird to original position and reset velocity
         bird.position = CGPoint(x: self.frame.size.width / 2.5, y: self.frame.midY)
         bird.physicsBody?.velocity = CGVector( dx: 0, dy: 0 )
@@ -208,7 +212,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         if moving.speed > 0  {
             for _ in touches { // do we need all touches?
                 bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-                bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 30))
+                bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 20))
             }
         } else if canRestart {
             self.resetScene()
@@ -237,6 +241,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
                 bird.physicsBody?.collisionBitMask = worldCategory
                 bird.run(  SKAction.rotate(byAngle: CGFloat(Double.pi) * CGFloat(bird.position.y) * 0.01, duration:1), completion:{self.bird.speed = 0 })
                 
+                if(score > 0) {
+                    MSCrashes.generateTestCrash();
+                }
                 
                 // Flash background if contact is detected
                 self.removeAction(forKey: "flash")

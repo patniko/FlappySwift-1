@@ -8,6 +8,7 @@
 
 import UIKit
 import SpriteKit
+import AppCenterAuth
 
 extension SKNode {
     class func unarchiveFromFile(_ file : String) -> SKNode? {
@@ -33,6 +34,11 @@ class GameViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //login();
+        prepareScene();
+    }
+    func prepareScene() {
 
         if let scene = GameScene.unarchiveFromFile("GameScene") as? GameScene {
             // Configure the view.
@@ -47,6 +53,24 @@ class GameViewController: UIViewController {
             scene.scaleMode = .aspectFill
             
             skView.presentScene(scene)
+        }
+    }
+    
+    func login() {
+        MSAuth.signIn { userInformation, error in
+            
+            if error == nil {
+                // Sign-in succeeded.
+                var accountId = userInformation!.accountId;
+                var idToken = userInformation!.idToken;
+                var accessToken = userInformation!.accessToken;
+                
+                self.prepareScene();
+                
+            } else {
+                // Do something with sign failure.
+            }
+            
         }
     }
 
