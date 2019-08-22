@@ -12,28 +12,31 @@ import AppCenterCrashes
 import AppCenterAnalytics
 import AppCenterAuth
 import AppCenterData
+import AppCenterPush
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, MSPushDelegate {
                             
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        MSPush.setDelegate(self);
         MSAppCenter.start("06cf3a29-2613-4e12-a5ad-96d5d2d79f3d", withServices:[
-            MSCrashes.self, MSAnalytics.self, MSAuth.self
-            ])
+            MSCrashes.self, MSAnalytics.self, MSAuth.self, MSData.self, MSPush.self
+            ]);
+        
+        // Force a login every time for demo purposes
         MSAuth.signOut();
+        
         MSAuth.signIn { userInformation, error in
             
             if error == nil {
                 // Sign-in succeeded.
-                var accountId = userInformation!.accountId;
-                var idToken = userInformation!.idToken;
-                var accessToken = userInformation!.accessToken;
-            
-                
+                _ = userInformation!.accountId;
+                _ = userInformation!.idToken;
+                _ = userInformation!.accessToken;
             } else {
                 // Do something with sign failure.
             }
@@ -65,6 +68,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
+    func push(_ push: MSPush!, didReceive pushNotification: MSPushNotification!) {
+        let title: String = pushNotification.title ?? ""
+        var message: String = pushNotification.message ?? ""
+        var customData: String = ""
+        for item in pushNotification.customData {
+            customData =  ((customData.isEmpty) ? "" : "\(customData), ") + "\(item.key): \(item.value)"
+        }
+        if (UIApplication.shared.applicationState == .background) {
+            NSLog("Notification received in background, title: \"\(title)\", message: \"\(message)\", custom data: \"\(customData)\"");
+        } else {
+            message =  message + ((customData.isEmpty) ? "" : "\n\(customData)")
+            
+            let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "OK", style: .cancel))
+            
+            // Show the alert controller.
+            self.window?.rootViewController?.present(alertController, animated: true)
+        }
+    }
 
 }
 

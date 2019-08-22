@@ -9,6 +9,7 @@
 import SpriteKit
 import AppCenterAnalytics
 import AppCenterCrashes
+import AppCenterData
 
 class GameScene: SKScene, SKPhysicsContactDelegate{
     let verticalPipeGap = 150.0
@@ -186,13 +187,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     }
     
     func resetScene (){
+        // Analytics sample
         MSAnalytics.trackEvent("Scene Reset")
         
         // Move bird to original position and reset velocity
         bird.position = CGPoint(x: self.frame.size.width / 2.5, y: self.frame.midY)
         bird.physicsBody?.velocity = CGVector( dx: 0, dy: 0 )
         bird.physicsBody?.collisionBitMask = worldCategory | pipeCategory
-        bird.speed = 1.0
+        bird.speed = 2.0
         bird.zRotation = 0.0
         
         // Remove all existing pipes
@@ -241,7 +243,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
                 bird.physicsBody?.collisionBitMask = worldCategory
                 bird.run(  SKAction.rotate(byAngle: CGFloat(Double.pi) * CGFloat(bird.position.y) * 0.01, duration:1), completion:{self.bird.speed = 0 })
                 
-                if(score > 0) {
+                // Crash sample
+                if(score >= 2 && score <= 3) {
                     MSCrashes.generateTestCrash();
                 }
                 
